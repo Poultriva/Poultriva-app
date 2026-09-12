@@ -97,7 +97,7 @@ export default function DashboardPage() {
             <h1 className="text-3xl font-bold text-green-950">
               Poultriva Dashboard
             </h1>
-            <p className="mt-2 text-gray-600">{email}</p>
+            <p className="mt-2 text-gray-600">Welcome back, {email}</p>
           </div>
 
           <button
@@ -108,7 +108,7 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        <nav className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8">
+        <nav className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-9">
           <a href="/dashboard" className="rounded-xl bg-green-700 px-4 py-3 text-center font-semibold text-white">Dashboard</a>
           <a href="/dashboard/farms/new" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Farms</a>
           <a href="/dashboard/flocks" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Flocks</a>
@@ -117,7 +117,40 @@ export default function DashboardPage() {
           <a href="/dashboard/production" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Production</a>
           <a href="/dashboard/finance" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Finance</a>
           <a href="/dashboard/profit" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Profit/Loss</a>
-        </nav>
+        <a href="/dashboard/ai" className="rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white">AI Assistant</a></nav>
+        <div className="mt-8 rounded-2xl bg-white p-6 shadow">
+          <h2 className="text-xl font-bold text-green-950">Quick Actions</h2>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <a href="/dashboard/farms/new" className="rounded-xl bg-green-700 px-4 py-3 text-center font-semibold text-white">+ Add Farm</a>
+            <a href="/dashboard/flocks/new" className="rounded-xl bg-green-100 px-4 py-3 text-center font-semibold text-green-900">+ Add Flock</a>
+            <a href="/dashboard/feed" className="rounded-xl bg-green-100 px-4 py-3 text-center font-semibold text-green-900">+ Feed Record</a>
+            <a href="/dashboard/production" className="rounded-xl bg-green-100 px-4 py-3 text-center font-semibold text-green-900">+ Production</a>
+            <a href="/dashboard/finance" className="rounded-xl bg-green-100 px-4 py-3 text-center font-semibold text-green-900">+ Finance</a>
+          </div>
+        </div>
+
+        <div className="mt-8 rounded-2xl bg-white p-6 shadow">
+          <h2 className="text-xl font-bold text-green-950">Farm Overview</h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-xl bg-green-50 p-4">
+              <p className="text-sm text-gray-500">Active Flocks</p>
+              <p className="mt-1 text-2xl font-bold text-green-900">{flocks}</p>
+            </div>
+            <div className="rounded-xl bg-blue-50 p-4">
+              <p className="text-sm text-gray-500">Current Birds</p>
+              <p className="mt-1 text-2xl font-bold text-blue-900">{birds}</p>
+            </div>
+            <div className="rounded-xl bg-yellow-50 p-4">
+              <p className="text-sm text-gray-500">Eggs Recorded</p>
+              <p className="mt-1 text-2xl font-bold text-yellow-900">{eggs}</p>
+            </div>
+            <div className="rounded-xl bg-purple-50 p-4">
+              <p className="text-sm text-gray-500">Net Profit/Loss</p>
+              <p className="mt-1 text-2xl font-bold text-purple-900">₦{profit.toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
+
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           <div className="rounded-2xl bg-white p-6 shadow">
             <p className="text-gray-500">Total Farms</p>
