@@ -108,6 +108,16 @@ export default function DashboardPage() {
           </button>
         </div>
 
+        <nav className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8">
+          <a href="/dashboard" className="rounded-xl bg-green-700 px-4 py-3 text-center font-semibold text-white">Dashboard</a>
+          <a href="/dashboard/farms/new" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Farms</a>
+          <a href="/dashboard/flocks" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Flocks</a>
+          <a href="/dashboard/feed" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Feed</a>
+          <a href="/dashboard/mortality" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Mortality</a>
+          <a href="/dashboard/production" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Production</a>
+          <a href="/dashboard/finance" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Finance</a>
+          <a href="/dashboard/profit" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Profit/Loss</a>
+        </nav>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           <div className="rounded-2xl bg-white p-6 shadow">
             <p className="text-gray-500">Total Farms</p>
