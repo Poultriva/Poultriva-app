@@ -1,0 +1,111 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+
+export default function MortalityPage() {
+  const [flocks, setFlocks] = useState<any[]>([]);
+  const [flockId, setFlockId] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [reason, setReason] = useState("");
+  const [recordDate, setRecordDate] = useState("");
+
+  useEffect(() => {
+    async function loadFlocks() {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) return;
+
+      const { data } = await supabase
+        .from("flocks")
+        .select("id,name,farms!inner(user_id)")
+        .eq("farms.user_id", userData.user.id);
+
+      setFlocks(data || []);
+    }
+
+    loadFlocks();
+  }, []);
+
+  async function save(e: any) {
+    e.preventDefault();
+
+    const { error } = await supabase.from("mortality_records").insert({
+      flock_id: flockId,
+      quantity: Number(quantity),
+      reason,
+      record_date: recordDate || null,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    alert("Mortality record saved successfully");
+    setQuantity("");
+    setReason("");
+    setRecordDate("");
+  }
+
+  return (
+    <main className="min-h-screen bg-green-50 p-8">
+      <div className="mx-auto max-w-2xl">
+        <h1 className="text-3xl font-bold text-green-950">
+          Mortality Records
+        </h1>
+
+        <form
+          onSubmit={save}
+          className="mt-8 space-y-5 rounded-2xl bg-white p-6 shadow"
+        >
+          <select
+            value={flockId}
+            onChange={(e) => setFlockId(e.target.value)}
+            className="w-full rounded-lg border p-3"
+            required
+          >
+            <option value="">Select Flock</option>
+            {flocks.map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.name}
+              </option>
+            ))}
+          </select>
+
+          <input
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            className="w-full rounded-lg border p-3"
+            placeholder="Number of birds"
+            min="1"
+            required
+          />
+
+          <input
+            type="text"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            className="w-full rounded-lg border p-3"
+            placeholder="Reason e.g. Disease"
+            required
+          />
+
+          <input
+            type="date"
+            value={recordDate}
+            onChange={(e) => setRecordDate(e.target.value)}
+            className="w-full rounded-lg border p-3"
+          />
+
+          <button
+            type="submit"
+            className="w-full rounded-lg bg-red-700 p-3 font-semibold text-white"
+          >
+            Save Mortality Record
+          </button>
+        </form>
+      </div>
+    </main>
+  );
+}
