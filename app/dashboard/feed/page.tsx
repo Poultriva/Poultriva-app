@@ -28,10 +28,29 @@ export default function FeedPage() {
   async function save(e: any) {
     e.preventDefault();
 
+    const feedQuantity = Number(quantity);
+    const feedCost = Number(cost);
+
+    if (!flockId) {
+      alert("Please select a flock");
+      return;
+    }
+
+    if (!Number.isFinite(feedQuantity) || feedQuantity <= 0) {
+      alert("Feed quantity must be greater than 0");
+      return;
+    }
+
+    if (!Number.isFinite(feedCost) || feedCost < 0) {
+      alert("Feed cost cannot be negative");
+      return;
+    }
+
     const { error } = await supabase.from("feed_records").insert({
-      flock_id: flockId, feed_type: feedType,
-      quantity: Number(quantity),
-      cost: Number(cost),
+      flock_id: flockId,
+      feed_type: feedType,
+      quantity: feedQuantity,
+      cost: feedCost,
     });
 
     if (error) {
