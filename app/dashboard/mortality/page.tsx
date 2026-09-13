@@ -31,6 +31,16 @@ export default function MortalityPage() {
 
     const mortalityQuantity = Number(quantity);
 
+    if (!flockId) {
+      alert("Please select a flock");
+      return;
+    }
+
+    if (!Number.isFinite(mortalityQuantity) || mortalityQuantity <= 0) {
+      alert("Mortality quantity must be greater than 0");
+      return;
+    }
+
     const { data: flock, error: flockError } = await supabase
       .from("flocks")
       .select("current_count,initial_count")
