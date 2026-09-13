@@ -14,6 +14,8 @@ export default function DashboardPage() {
   const [eggs, setEggs] = useState(0);
   const [sales, setSales] = useState(0);
   const [expenses, setExpenses] = useState(0);
+  const [feedUsed, setFeedUsed] = useState(0);
+  const [feedCost, setFeedCost] = useState(0);
 
   useEffect(() => {
     async function loadDashboard() {
@@ -77,8 +79,27 @@ export default function DashboardPage() {
           .filter((r: any) => r.type === "expense")
           .reduce((sum: number, r: any) => sum + Number(r.amount || 0), 0)
       );
-    }
 
+      const { data: feedData } = await supabase
+        .from("feed_records")
+        .select("quantity,cost,flocks!inner(farm_id)")
+        .in("flocks.farm_id", farmIds);
+
+      setFeedUsed(
+        (feedData || []).reduce(
+          (sum: number, r: any) => sum + Number(r.quantity || 0),
+          0
+        )
+      );
+
+      setFeedCost(
+        (feedData || []).reduce(
+          (sum: number, r: any) => sum + Number(r.cost || 0),
+          0
+        )
+      );
+
+    }
     loadDashboard();
   }, [router]);
 
@@ -151,6 +172,19 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        <div className="mt-8 rounded-2xl bg-white p-6 shadow">
+          <h2 className="text-xl font-bold text-green-950">Feed Overview</h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl bg-orange-50 p-4">
+              <p className="text-sm text-gray-500">Feed Used</p>
+              <p className="mt-1 text-2xl font-bold text-orange-900">{feedUsed.toLocaleString()} kg</p>
+            </div>
+            <div className="rounded-xl bg-red-50 p-4">
+              <p className="text-sm text-gray-500">Feed Cost</p>
+              <p className="mt-1 text-2xl font-bold text-red-900">₦{feedCost.toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           <div className="rounded-2xl bg-white p-6 shadow">
             <p className="text-gray-500">Total Farms</p>

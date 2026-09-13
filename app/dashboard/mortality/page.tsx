@@ -29,9 +29,27 @@ export default function MortalityPage() {
   async function save(e: any) {
     e.preventDefault();
 
+    const mortalityQuantity = Number(quantity);
+
+    const { data: flock, error: flockError } = await supabase
+      .from("flocks")
+      .select("current_count,initial_count")
+      .eq("id", flockId)
+      .single();
+
+    if (flockError || !flock) {
+      alert(flockError?.message || "Flock not found");
+      return;
+    }
+
+    if (mortalityQuantity > Number(flock.current_count)) {
+      alert("Mortality cannot be greater than current birds");
+      return;
+    }
+
     const { error } = await supabase.from("mortality_records").insert({
       flock_id: flockId,
-      quantity: Number(quantity),
+      quantity: mortalityQuantity,
       reason,
       record_date: recordDate || null,
     });
@@ -41,7 +59,39 @@ export default function MortalityPage() {
       return;
     }
 
-    alert("Mortality record saved successfully");
+    const { data: mortalityRecords, error: mortalityError } = await supabase
+      .from("mortality_records")
+      .select("quantity")
+      .eq("flock_id", flockId);
+
+    if (mortalityError) {
+      alert(mortalityError.message);
+      return;
+    }
+
+    const totalMortality = (mortalityRecords || []).reduce(
+      (sum, record) => sum + Number(record.quantity || 0),
+      0
+    );
+
+    const newCurrentCount = Math.max(
+      0,
+      Number(flock.initial_count) - totalMortality
+    );
+
+    const { error: updateError } = await supabase
+      .from("flocks")
+      .update({
+        current_count: newCurrentCount,
+      })
+      .eq("id", flockId);
+
+    if (updateError) {
+      alert(updateError.message);
+      return;
+    }
+
+    alert("Mortality saved and flock count updated successfully");
     setQuantity("");
     setReason("");
     setRecordDate("");

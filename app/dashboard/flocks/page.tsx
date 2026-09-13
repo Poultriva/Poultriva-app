@@ -16,7 +16,43 @@ export default function FlocksPage() {
         .select("id,name,bird_type,initial_count,current_count,start_date,farms(name)")
         .order("created_at", { ascending: false });
 
-      setFlocks(data || []);
+      if (!data) {
+        setFlocks([]);
+        return;
+      }
+
+      const flockIds = data.map((flock) => flock.id);
+
+      const { data: mortalityData } = await supabase
+        .from("mortality_records")
+        .select("flock_id,quantity")
+        .in("flock_id", flockIds);
+
+      const { data: productionData } = await supabase
+        .from("production_records")
+        .select("flock_id,eggs_count")
+        .in("flock_id", flockIds);
+
+      const mortalityMap: Record<string, number> = {};
+      const productionMap: Record<string, number> = {};
+
+      (mortalityData || []).forEach((record) => {
+        mortalityMap[record.flock_id] =
+          (mortalityMap[record.flock_id] || 0) + Number(record.quantity || 0);
+      });
+
+      (productionData || []).forEach((record) => {
+        productionMap[record.flock_id] =
+          (productionMap[record.flock_id] || 0) + Number(record.eggs_count || 0);
+      });
+
+      const enrichedFlocks = data.map((flock) => ({
+        ...flock,
+        mortality: mortalityMap[flock.id] || 0,
+        eggs: productionMap[flock.id] || 0,
+      }));
+
+      setFlocks(enrichedFlocks);
     }
 
     loadFlocks();
@@ -110,6 +146,20 @@ export default function FlocksPage() {
                         Start Date:
                       </span>{" "}
                       {flock.start_date || "Not set"}
+                    </p>
+
+                    <p>
+                      <span className="font-semibold">
+                        Mortality:
+                      </span>{" "}
+                      {flock.mortality} birds
+                    </p>
+
+                    <p>
+                      <span className="font-semibold">
+                        Eggs Produced:
+                      </span>{" "}
+                      {flock.eggs}
                     </p>
 
                     <p>
