@@ -28,10 +28,28 @@ export default function ProductionPage() {
   async function save(e: any) {
     e.preventDefault();
 
+    const eggs = Number(eggCount);
+    const broken = Number(breakingEgg);
+
+    if (!flockId) {
+      alert("Please select a flock");
+      return;
+    }
+
+    if (!Number.isFinite(eggs) || eggs < 0) {
+      alert("Egg count cannot be negative");
+      return;
+    }
+
+    if (!Number.isFinite(broken) || broken < 0) {
+      alert("Broken eggs cannot be negative");
+      return;
+    }
+
     const { error } = await supabase.from("production_records").insert({
       flock_id: flockId,
-      eggs_count: Number(eggCount),
-      broken_eggs: Number(breakingEgg),
+      eggs_count: eggs,
+      broken_eggs: broken,
     });
 
     if (error) {
