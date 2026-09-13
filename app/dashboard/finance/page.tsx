@@ -32,11 +32,28 @@ export default function FinancePage() {
   async function save(e: any) {
     e.preventDefault();
 
+    const financialAmount = Number(amount);
+
+    if (!farmId) {
+      alert("Please select a farm");
+      return;
+    }
+
+    if (!Number.isFinite(financialAmount) || financialAmount <= 0) {
+      alert("Amount must be greater than 0");
+      return;
+    }
+
+    if (!type) {
+      alert("Please select a transaction type");
+      return;
+    }
+
     const { error } = await supabase.from("financial_records").insert({
       farm_id: farmId,
       type,
       category,
-      amount: Number(amount),
+      amount: financialAmount,
       description,
       record_date: recordDate || null,
     });
