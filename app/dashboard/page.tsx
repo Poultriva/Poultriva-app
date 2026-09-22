@@ -138,6 +138,8 @@ export default function DashboardPage() {
           <a href="/dashboard/production" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Production</a>
           <a href="/dashboard/finance" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Finance</a>
           <a href="/dashboard/profit" className="rounded-xl bg-white px-4 py-3 text-center font-semibold text-green-900 shadow">Profit/Loss</a>
+  <a href="/dashboard/contact" className="rounded-lg bg-green-700 px-4 py-2 text-center font-semibold text-white">Contact Admin</a>
+        <a href="/admin" className="rounded-xl bg-purple-600 px-4 py-3 text-center font-semibold text-white">Admin Panel</a>
         <a href="/dashboard/ai" className="rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white">AI Assistant</a></nav>
         <div className="mt-8 rounded-2xl bg-white p-6 shadow">
           <h2 className="text-xl font-bold text-green-950">Quick Actions</h2>

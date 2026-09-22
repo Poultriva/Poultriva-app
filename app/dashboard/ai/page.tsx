@@ -82,9 +82,32 @@ export default function AIFarmAssistantPage() {
         farms,
         flocks,
         production,
-        mortality,
         feed,
         finance,
+        currentBirds: flocks.reduce(
+          (sum: number, flock: any) => sum + Number(flock.current_count || 0),
+          0
+        ),
+        mortality: mortality.reduce(
+          (sum: number, record: any) => sum + Number(record.quantity || 0),
+          0
+        ),
+        eggs: production.reduce(
+          (sum: number, record: any) => sum + Number(record.eggs_count || 0),
+          0
+        ),
+        sales: finance
+          .filter((record: any) => record.type === "sale")
+          .reduce(
+            (sum: number, record: any) => sum + Number(record.amount || 0),
+            0
+          ),
+        expenses: finance
+          .filter((record: any) => record.type === "expense")
+          .reduce(
+            (sum: number, record: any) => sum + Number(record.amount || 0),
+            0
+          ),
       };
 
       const response = await fetch("/api/ai", {
@@ -152,7 +175,7 @@ export default function AIFarmAssistantPage() {
               onChange={(e) => setMessage(e.target.value)}
               className="w-full rounded-xl border p-4"
               rows={4}
-              placeholder="e.g. Me zan kula da shi a flock dina?"
+              placeholder="e.g. What should I watch out for in my flock?"
             />
 
             <button
@@ -160,7 +183,7 @@ export default function AIFarmAssistantPage() {
               disabled={loading}
               className="mt-4 rounded-xl bg-green-700 px-6 py-3 font-semibold text-white disabled:opacity-50"
             >
-              {loading ? "Poultriva AI na tunani..." : "Ask Poultriva AI"}
+              {loading ? "Poultriva AI is thinking..." : "Ask Poultriva AI"}
             </button>
           </form>
         </div>
